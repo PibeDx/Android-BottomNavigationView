@@ -3,8 +3,11 @@ package com.josecuentas.android_bottomnavigationview.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,11 @@ public class FacebookFragment extends Fragment {
 
     public static final String ARGS_TITLE = ".title";
     private TextView mTextView;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+
+    private String[] mTitles = {"Post", "Contactos", "Mi cuenta"};
+    private int[] mIcons = {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher};
 
     public FacebookFragment() {
         // Required empty public constructor
@@ -41,6 +49,8 @@ public class FacebookFragment extends Fragment {
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mTextView = (TextView) view.findViewById(R.id.textview);
+        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         if (getArguments() == null) return;
         final String title = getArguments().getString(ARGS_TITLE);
         mTextView.setText(title);
@@ -58,6 +68,39 @@ public class FacebookFragment extends Fragment {
 
             }
         });
+
+        ui();
+    }
+
+    private void ui() {
+        if (mTitles.length != mIcons.length) {
+            throw new RuntimeException("mTitle = " + mTitles.length + " and mIcons = " + mIcons.length + " not size equals");
+        }
+
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        //TODO: important! use getChildFragmentManager() for avoid bug
+        mViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+            @Override public Fragment getItem(int position) {
+                return new FacebookItemFragment();
+            }
+
+            @Override public int getCount() {
+                return mTitles.length;
+            }
+        });
+        mTabLayout.post(new Runnable() {
+            @Override public void run() {
+                mTabLayout.setupWithViewPager(mViewPager);
+                setupTab(mTabLayout.getTabCount());
+            }
+        });
+    }
+
+    private void setupTab(int size) {
+        for (int i = 0; i < size; i++) {
+            mTabLayout.getTabAt(i).setIcon(mIcons[i]);
+        }
+
     }
 
     private void changeFragment(int position) {
