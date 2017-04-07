@@ -6,21 +6,31 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.josecuentas.android_bottomnavigationview.ui.fragment.FacebookDrawerFragment;
 import com.josecuentas.android_bottomnavigationview.ui.fragment.FacebookFragment;
+import com.josecuentas.android_bottomnavigationview.ui.fragment.TwitterDrawerFragment;
 import com.josecuentas.android_bottomnavigationview.ui.fragment.TwitterFragment;
 
 import java.util.List;
 
 /*
 * base: http://stackoverflow.com/a/31999206
+* fix: http://stackoverflow.com/a/35593494
 * */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    private DrawerLayout mDrawerLayout;
     private BottomNavigationView mBottomNavigationView;
     private Fragment mFragmentFacebook, mFragmentTwitter;
+    private FacebookDrawerFragment mDrawerFacebook;
+    private TwitterDrawerFragment mDrawerTwitter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +39,19 @@ public class MainActivity extends AppCompatActivity {
         mFragmentFacebook = FacebookFragment.newInstance("Facebook");
         mFragmentTwitter = TwitterFragment.newInstance("Twitter");
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mDrawerFacebook = new FacebookDrawerFragment();
+        mDrawerFacebook.setDrawerLayout(mDrawerLayout);
+        mDrawerTwitter = new TwitterDrawerFragment();
+        mDrawerTwitter.setDrawerLayout(mDrawerLayout);
+
+        mDrawerLayout.openDrawer(GravityCompat.START);
+
+
+
         changeFragment(0);
+        setupDrawer(0);
         mBottomNavigationView.setItemIconTintList(null);
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(
@@ -39,10 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action1:
                         item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_facebook));
                         changeFragment(0);
+                        setupDrawer(0);
                         break;
                     case R.id.action2:
                         item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_twitter));
                         changeFragment(1);
+                        setupDrawer(1);
                         break;
                     default:
                         return false;
@@ -57,22 +81,42 @@ public class MainActivity extends AppCompatActivity {
         //clearBackStack();
         if (position == 0) {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //if (mFragmentTwitter.isVisible()) {
-                getSupportFragmentManager().beginTransaction().remove(mFragmentTwitter).commit();
-            //}
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frameContainer, mFragmentFacebook)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().remove(mFragmentTwitter).commit();
+            if(getSupportFragmentManager().findFragmentByTag("faceboook") == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameContainer, mFragmentFacebook, "faceboook")
+                        .commit();
+            }
+
+
 
         } else if (position % 2 != 0) {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //if (mFragmentFacebook.isVisible()) {
-                getSupportFragmentManager().beginTransaction().remove(mFragmentFacebook).commit();
-            //}
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frameContainer, mFragmentTwitter)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().remove(mFragmentFacebook).commit();
+            if(getSupportFragmentManager().findFragmentByTag("twitter") == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameContainer, mFragmentTwitter, "twitter")
+                        .commit();
+            }
+
+
         }
+    }
+
+    private void setupDrawer(int position) {
+        switch (position) {
+            case 0:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.navigation_drawer, mDrawerFacebook)
+                        .commit();
+                break;
+            case 1:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.navigation_drawer,mDrawerTwitter)
+                        .commit();
+                break;
+        }
+
     }
 
     /*
