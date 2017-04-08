@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action1"
         android:icon="@drawable/ic_facebook"
-        android:title="facebook"/>
+        android:title="facebook"
+        app:showAsAction="withText"/>
 
     <item
         android:id="@+id/action2"
         android:icon="@drawable/ic_twitter"
-        android:title="twitter"/>
+        android:title="twitter"
+        app:showAsAction="ifRoom"/>
+
+    <!--<item
+        android:id="@+id/action3"
+        android:icon="@drawable/ic_facebook"
+        android:title="facebook"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action4"
+        android:icon="@drawable/ic_twitter"
+        android:title="twitter"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action5"
+        android:icon="@drawable/ic_facebook"
+        android:title="facebook"
+        app:showAsAction="ifRoom"/>-->
+
+
 
 </menu>
