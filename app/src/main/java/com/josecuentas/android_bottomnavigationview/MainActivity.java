@@ -23,6 +23,7 @@ import java.util.List;
 /*
 * base: http://stackoverflow.com/a/31999206
 * fix: http://stackoverflow.com/a/35593494
+* material: https://material.io/guidelines/components/bottom-navigation.html#bottom-navigation-behavior
 * */
 
 public class MainActivity extends AppCompatActivity {
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().remove(mFragmentTwitter).commit();
             if(getSupportFragmentManager().findFragmentByTag("faceboook") == null) {
                 getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.frameContainer, mFragmentFacebook, "faceboook")
                         .commit();
             }
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().remove(mFragmentFacebook).commit();
             if(getSupportFragmentManager().findFragmentByTag("twitter") == null) {
                 getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.frameContainer, mFragmentTwitter, "twitter")
                         .commit();
             }
