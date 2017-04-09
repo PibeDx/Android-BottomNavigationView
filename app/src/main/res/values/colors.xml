@@ -6,4 +6,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <color name="color_twitter">#00AFF0</color>
+    <color name="color_facebook">#3F51B5</color>
 </resources>

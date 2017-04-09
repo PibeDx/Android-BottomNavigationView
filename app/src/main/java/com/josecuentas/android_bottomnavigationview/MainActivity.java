@@ -1,5 +1,6 @@
 package com.josecuentas.android_bottomnavigationview;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mFragmentFacebook, mFragmentTwitter;
     private FacebookDrawerFragment mDrawerFacebook;
     private TwitterDrawerFragment mDrawerTwitter;
+    private int[] bottomBarColors;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerTwitter = new TwitterDrawerFragment();
         mDrawerTwitter.setDrawerLayout(mDrawerLayout);
 
+        bottomBarColors = new int[] {
+            R.color.color_facebook,
+            R.color.color_twitter
+        };
+
         mDrawerLayout.openDrawer(GravityCompat.START);
 
 
@@ -59,12 +66,12 @@ public class MainActivity extends AppCompatActivity {
                             MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action1:
-                        item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_facebook));
+                        //item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_facebook));
                         changeFragment(0);
                         setupDrawer(0);
                         break;
                     case R.id.action2:
-                        item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_twitter));
+                        //item.setIcon(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_twitter));
                         changeFragment(1);
                         setupDrawer(1);
                         break;
@@ -79,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeFragment(int position) {
         //clearBackStack();
+        changeBottomBarColor(position);
         if (position == 0) {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             getSupportFragmentManager().beginTransaction().remove(mFragmentTwitter).commit();
@@ -100,6 +108,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
+        }
+    }
+
+    private void changeBottomBarColor(int index) {
+        if (bottomBarColors != null) {
+            mBottomNavigationView.setItemBackgroundResource(bottomBarColors[index]);
+            mBottomNavigationView.setBackgroundResource(bottomBarColors[index]);
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(ContextCompat.getColor(this, bottomBarColors[index]));
+            }
         }
     }
 
